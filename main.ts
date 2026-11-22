@@ -23,17 +23,15 @@
 //      missing; South Korea's education minister resigns over an AI
 //      cheating scandal.
 //
-// The image ships in this repository as entry.png.b64 (base64 text, because
-// the image itself is binary). The program decodes it and writes the exact
-// bytes to /output/entry.png, so both grader runs produce identical bytes,
-// with no network access needed. A copy of the image as entry.png is kept
-// beside it for reference; the program reads the .b64 file.
+// The image ships in this repository as entry.png. The program copies it to
+// the output, so both grader runs produce identical bytes, with no network
+// access needed.
 //
 // Run locally: mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
-const b64 = readFileSync(new URL("./entry.png.b64", import.meta.url), "utf8").replace(/\s+/g, "");
-writeFileSync(join(outDir, "entry.png"), Buffer.from(b64, "base64"));
+mkdirSync(outDir, { recursive: true });
+copyFileSync(new URL("./entry.png", import.meta.url), join(outDir, "entry.png"));
